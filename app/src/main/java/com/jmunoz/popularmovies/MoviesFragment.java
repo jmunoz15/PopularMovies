@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -29,37 +30,42 @@ import java.util.List;
 public class MoviesFragment extends Fragment {
 
     public static final String TAG = MoviesFragment.class.getSimpleName();
-
     public static final String MOVIE_EXTRA = "Movie";
+    public static final int MAX_PAGES = 1000;
 
     private MovieAdapter mMovieAdapter;
+    private int mPage;
+    private boolean mLoadingPage;
+    private View mRootView;
 
     public MoviesFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_movies, container, false);
-        mMovieAdapter = new MovieAdapter(getActivity());
-        GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
-        gridView.setAdapter(mMovieAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                intent.putExtra(MOVIE_EXTRA, (Movie) mMovieAdapter.getItem(position));
-                startActivity(intent);
-            }
-        });
-        return rootView;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mMovieAdapter.resetMovies();
-        getMoviesList();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            mRootView = inflater.inflate(R.layout.fragment_movies, container, false);
+            mMovieAdapter = new MovieAdapter(getActivity());
+            GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
+            gridView.setAdapter(mMovieAdapter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+                    intent.putExtra(MOVIE_EXTRA, (Movie) mMovieAdapter.getItem(position));
+                    startActivity(intent);
+                }
+            });
+            gridView.setOnScrollListener(new EndlessScrollListener());
+        }
+        return mRootView;
     }
 
     private void getMoviesList() {
@@ -70,7 +76,8 @@ public class MoviesFragment extends Fragment {
                 appendQueryParameter(getString(R.string.sort_by),
                         preferences.getString(getString(R.string.sort_by),
                                 getString(R.string.popularity_value))).
-                appendQueryParameter(getString(R.string.api_key), getString(R.string.api_key_value));
+                appendQueryParameter(getString(R.string.api_key), getString(R.string.api_key_value)).
+                appendQueryParameter(getString(R.string.page), String.valueOf(mPage));
         String url = builder.build().toString();
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -79,9 +86,12 @@ public class MoviesFragment extends Fragment {
                         try {
                             List<Movie> moviesList = Movie.getMoviesFromJSON(response);
                             mMovieAdapter.addMovies(moviesList);
+                            mLoadingPage = false;
+
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
                         }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -92,5 +102,22 @@ public class MoviesFragment extends Fragment {
                     }
                 });
         PopularMoviesApp.getInstance().addToRequestQueue(request, TAG);
+    }
+
+    class EndlessScrollListener implements AbsListView.OnScrollListener {
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+                             int totalItemCount) {
+            if ((!(mLoadingPage)) && ((totalItemCount - visibleItemCount) <= (firstVisibleItem))
+                    && (mPage < MAX_PAGES)) {
+                mPage++;
+                getMoviesList();
+                mLoadingPage = true;
+            }
+        }
+
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
+        }
     }
 }

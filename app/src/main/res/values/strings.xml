@@ -12,6 +12,7 @@
     <string name="image_url" translatable="false">image.tmdb.org</string>
     <string name="date_api_format" translatable="false">yyyy-MM-dd</string>
     <string name="date_app_format" translatable="false">MM/dd/yyyy</string>
+    <string name="page" translatable="false">page</string>
     <string name="title_activity_movie_detail">Detail</string>
     
     <string name="order">Sort By</string>

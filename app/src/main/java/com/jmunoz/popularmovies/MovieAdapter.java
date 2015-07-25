@@ -19,7 +19,7 @@ public class MovieAdapter extends BaseAdapter {
     private Context mContext;
 
     public MovieAdapter(Context context) {
-        mMoviesList = new ArrayList<Movie>();
+        mMoviesList = new ArrayList<>();
         mInflater = LayoutInflater.from(context);
         mContext = context;
     }
@@ -27,10 +27,6 @@ public class MovieAdapter extends BaseAdapter {
     public void addMovies(List<Movie> movies) {
         mMoviesList.addAll(movies);
         notifyDataSetChanged();
-    }
-
-    public void resetMovies() {
-        mMoviesList = new ArrayList<Movie>();
     }
 
     @Override

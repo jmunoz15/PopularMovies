@@ -23,12 +23,13 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
     private String mId;
     private String mTitle;
     private String mPosterPath;
     private String mReleaseDate;
-    private double mRating;
     private String mOverview;
+    private double mRating;
 
     public Movie(){
 
@@ -44,7 +45,7 @@ public class Movie implements Parcelable {
     }
 
     public static List<Movie> getMoviesFromJSON(JSONObject response) throws JSONException {
-        List<Movie> movies = new ArrayList<Movie>();
+        List<Movie> movies = new ArrayList<>();
         JSONArray moviesArray = response.getJSONArray("results");
         JSONObject movieObject;
         Movie movie;
@@ -68,8 +69,7 @@ public class Movie implements Parcelable {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(context.getString(R.string.schema)).authority(context.getString(R.string.image_url))
                 .appendPath("t").appendPath("p").appendPath("w500");
-        String url = builder.build().toString().concat(posterPath);
-        return url;
+        return builder.build().toString().concat(posterPath);
     }
 
     public void setId(String id) {
