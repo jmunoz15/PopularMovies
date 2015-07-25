@@ -5,7 +5,7 @@
     <string name="base_url" translatable="false">api.themoviedb.org</string>
     <string name="schema" translatable="false">http</string>
     <string name="api_key" translatable="false">api_key</string>
-    <string name="api_key_value" translatable="false">cd15ba73833bbd906b185ba8a1361453</string>
+    <string name="api_key_value" translatable="false"></string>
     <string name="sort_by" translatable="false">sort_by</string>
     <string name="popularity_value" translatable="false">popularity.desc</string>
     <string name="vote_average_value" translatable="false">vote_average.desc</string>
