@@ -29,6 +29,11 @@ public class MovieAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void resetAdapter(){
+        mMoviesList = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mMoviesList.size();

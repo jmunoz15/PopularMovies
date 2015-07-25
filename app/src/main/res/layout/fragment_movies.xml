@@ -15,6 +15,7 @@
         android:verticalSpacing="@dimen/gridview_vertical_spacing"
         android:horizontalSpacing="@dimen/gridview_horizontal_spacing"
         android:stretchMode="columnWidth"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:columnWidth="@dimen/grid_width"/>
 
 </FrameLayout>

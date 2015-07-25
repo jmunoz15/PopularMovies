@@ -37,6 +37,8 @@ public class MoviesFragment extends Fragment {
     private int mPage;
     private boolean mLoadingPage;
     private View mRootView;
+    private String mSortSelected;
+    private SharedPreferences mPreferences;
 
     public MoviesFragment() {
     }
@@ -45,6 +47,21 @@ public class MoviesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mSortSelected = mPreferences.getString(getString(R.string.sort_by),
+                getString(R.string.popularity_value));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        String sortPreference = mPreferences.getString(getString(R.string.sort_by),
+                getString(R.string.popularity_value));
+        if(!(sortPreference.equalsIgnoreCase(mSortSelected))){
+            mSortSelected = sortPreference;
+            mPage = 0;
+            mMovieAdapter.resetAdapter();
+        }
     }
 
     @Override
@@ -69,13 +86,11 @@ public class MoviesFragment extends Fragment {
     }
 
     private void getMoviesList() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(getString(R.string.schema)).authority(getString(R.string.base_url)).
                 appendPath("3").appendPath("discover").appendPath("movie").
                 appendQueryParameter(getString(R.string.sort_by),
-                        preferences.getString(getString(R.string.sort_by),
-                                getString(R.string.popularity_value))).
+                        mSortSelected).
                 appendQueryParameter(getString(R.string.api_key), getString(R.string.api_key_value)).
                 appendQueryParameter(getString(R.string.page), String.valueOf(mPage));
         String url = builder.build().toString();
