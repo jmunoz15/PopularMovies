@@ -19,5 +19,6 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/trailerTitle"
         android:layout_gravity="center"
-        android:layout_marginRight="@dimen/trailer_margin"/>
+        android:layout_marginRight="@dimen/trailer_margin"
+        android:textColor="@color/dark_blue"/>
 </LinearLayout>

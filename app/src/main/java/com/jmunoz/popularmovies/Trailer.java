@@ -62,6 +62,8 @@ public class Trailer implements Parcelable {
         return mName;
     }
 
+    public String getKey(){ return mKey; };
+
     public static List<Trailer> getTrailersFromJSON(JSONObject response) throws JSONException {
         List<Trailer> trailers = new ArrayList<>();
         JSONArray trailerArray = response.getJSONArray("results");

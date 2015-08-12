@@ -1,5 +1,6 @@
 package com.jmunoz.popularmovies;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -7,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -97,6 +100,18 @@ public class MovieDetailFragment extends Fragment {
                             TrailerAdapter adapter = new TrailerAdapter();
                             ListView trailerList = (ListView) getView().findViewById(R.id.trailerListView);
                             trailerList.setAdapter(adapter);
+                            setListViewHeightBasedOnChildren(trailerList);
+                            trailerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Uri.Builder builder = new Uri.Builder();
+                                    builder.scheme(getString(R.string.schema)).authority(getString(R.string.youtube_url)).
+                                            appendPath("watch").
+                                            appendQueryParameter("v", mMovie.getmTrailerList().get(position).getKey());
+                                    startActivity(new Intent(Intent.ACTION_VIEW, builder.build()));
+
+                                }
+                            });
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
                         }
@@ -110,6 +125,26 @@ public class MovieDetailFragment extends Fragment {
                     }
                 });
         PopularMoviesApp.getInstance().addToRequestQueue(request, TAG);
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 
     private class TrailerAdapter extends BaseAdapter{

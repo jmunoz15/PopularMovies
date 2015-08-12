@@ -14,6 +14,7 @@
     <string name="date_app_format" translatable="false">MM/dd/yyyy</string>
     <string name="page" translatable="false">page</string>
     <string name="title_activity_movie_detail">Detail</string>
+    <string name="youtube_url" translatable="false">youtube.com</string>
     
     <string name="order">Sort By</string>
     <string name="popularity">Popularity</string>
