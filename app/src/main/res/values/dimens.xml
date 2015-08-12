@@ -9,4 +9,6 @@
     <dimen name="movie_title_height">75dp</dimen>
     <dimen name="date_margin">10dp</dimen>
     <dimen name="grid_width">150dp</dimen>
+    <dimen name="trailer_item_height">48dp</dimen>
+    <dimen name="trailer_margin">2dp</dimen>
 </resources>
