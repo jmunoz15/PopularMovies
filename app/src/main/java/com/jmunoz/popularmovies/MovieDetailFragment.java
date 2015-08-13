@@ -1,7 +1,10 @@
 package com.jmunoz.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -22,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.jmunoz.popularmovies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.client.methods.HttpOptions;
@@ -32,12 +38,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class MovieDetailFragment extends Fragment {
 
     public static final String TAG = MovieDetailFragment.class.getSimpleName();
+    public static final String FAVORITE_MOVIES = "favorite_movies";
 
     private Movie mMovie;
 
@@ -66,6 +75,35 @@ public class MovieDetailFragment extends Fragment {
         Picasso.with(getActivity())
                 .load(Movie.getPosterUrl(mMovie.getPosterPath(), getActivity()))
                 .into(poster);
+        CheckBox favoriteCheckBox = (CheckBox) rootView.findViewById(R.id.favoriteCheckBox);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final Set<String> favoriteMovies = preferences.getStringSet(FAVORITE_MOVIES, new HashSet<String>());
+        if(favoriteMovies.contains(mMovie.getId())){
+            favoriteCheckBox.setChecked(true);
+        }
+        favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    ContentValues values = new ContentValues();
+                    values.put(MoviesContract.MoviesEntry.SERVER_ID, mMovie.getId());
+                    values.put(MoviesContract.MoviesEntry.COLUMN_TITLE, mMovie.getTitle());
+                    values.put(MoviesContract.MoviesEntry.COLUMN_POSTER, mMovie.getPosterPath());
+                    values.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
+                    values.put(MoviesContract.MoviesEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+                    values.put(MoviesContract.MoviesEntry.COLUMN_RATING, mMovie.getRating());
+                    getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, values);
+                    favoriteMovies.add(mMovie.getId());
+                }
+                else{
+                    String selection = MoviesContract.MoviesEntry.SERVER_ID + " = ?";
+                    String[] selectionArgs = {mMovie.getId()};
+                    int deleted = getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI, selection, selectionArgs);
+                    favoriteMovies.remove(mMovie.getId());
+                }
+                preferences.edit().putStringSet(FAVORITE_MOVIES, favoriteMovies).commit();
+            }
+        });
         getTrailerList();
         getReviewList();
         return rootView;

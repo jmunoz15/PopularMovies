@@ -32,7 +32,7 @@
         android:scrollHorizontally="true"
         android:layout_weight="4"/>
 
-        <CheckBox android:id="@+id/star"
+        <CheckBox android:id="@+id/favoriteCheckBox"
             android:button="@drawable/checkbox_selector"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
