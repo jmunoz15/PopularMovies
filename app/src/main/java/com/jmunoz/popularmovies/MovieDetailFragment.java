@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -23,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.client.methods.HttpOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +67,7 @@ public class MovieDetailFragment extends Fragment {
                 .load(Movie.getPosterUrl(mMovie.getPosterPath(), getActivity()))
                 .into(poster);
         getTrailerList();
+        getReviewList();
         return rootView;
     }
 
@@ -112,6 +115,53 @@ public class MovieDetailFragment extends Fragment {
 
                                 }
                             });
+                            if(trailers.size() == 0){
+                                TextView trailerLabel = (TextView) getView().findViewById(R.id.trailersLabel);
+                                trailerLabel.setVisibility(View.GONE);
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.e(TAG, volleyError.getMessage());
+                        Toast.makeText(getActivity(), volleyError.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        PopularMoviesApp.getInstance().addToRequestQueue(request, TAG);
+    }
+
+    private void getReviewList() {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(getString(R.string.schema)).authority(getString(R.string.base_url)).
+                appendPath("3").appendPath("movie").appendPath(mMovie.getId()).appendPath("reviews").
+                appendQueryParameter(getString(R.string.api_key), getString(R.string.api_key_value));
+        String url = builder.build().toString();
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            List<Review> reviews = Review.getReviewsFromJSON(response);
+                            mMovie.setReviewList(reviews);
+                            LinearLayout container = (LinearLayout) getView().findViewById(R.id.container);
+                            for(Review review : reviews){
+                                LinearLayout reviewLayout = (LinearLayout)LayoutInflater.from(getActivity())
+                                        .inflate(R.layout.adapter_review, null);
+                                TextView contentText = (TextView)reviewLayout.findViewById(R.id.reviewText);
+                                TextView authorText = (TextView)reviewLayout.findViewById(R.id.authorText);
+                                contentText.setText(review.getContent());
+                                authorText.setText(review.getAuthor());
+                                container.addView(reviewLayout);
+                            }
+
+                            if(reviews.size() == 0){
+                                TextView reviewLabel = (TextView) getView().findViewById(R.id.reviewsLabel);
+                                reviewLabel.setVisibility(View.GONE);
+                            }
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
                         }
@@ -129,11 +179,6 @@ public class MovieDetailFragment extends Fragment {
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
         int totalHeight = 0;
         for (int i = 0; i < listAdapter.getCount(); i++) {
             View listItem = listAdapter.getView(i, null, listView);

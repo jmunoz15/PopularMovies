@@ -15,6 +15,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         if (savedInstanceState == null) {
+            getSupportActionBar().setElevation(0f);
             Movie movie = getIntent().getParcelableExtra(MoviesFragment.MOVIE_EXTRA);
             Bundle args = new Bundle();
             args.putParcelable(MoviesFragment.MOVIE_EXTRA,

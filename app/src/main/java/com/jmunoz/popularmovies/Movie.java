@@ -31,6 +31,7 @@ public class Movie implements Parcelable {
     private String mOverview;
     private double mRating;
     private List<Trailer> mTrailerList;
+    private List<Review> mReviewList;
 
     public Movie(){
 
@@ -45,6 +46,8 @@ public class Movie implements Parcelable {
         mOverview = parcel.readString();
         mTrailerList = new ArrayList<>();
         parcel.readTypedList(mTrailerList, Trailer.CREATOR);
+        mReviewList = new ArrayList<>();
+        parcel.readTypedList(mReviewList, Review.CREATOR);
     }
 
     public static List<Movie> getMoviesFromJSON(JSONObject response) throws JSONException {
@@ -131,6 +134,12 @@ public class Movie implements Parcelable {
         this.mTrailerList = mTrailerList;
     }
 
+    public List<Review> getReviewList(){ return mReviewList; }
+
+    public void setReviewList(List<Review> reviewList){
+        mReviewList = reviewList;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -145,5 +154,6 @@ public class Movie implements Parcelable {
         dest.writeDouble(mRating);
         dest.writeString(mOverview);
         dest.writeTypedList(mTrailerList);
+        dest.writeTypedList(mReviewList);
     }
 }

@@ -4,49 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.jmunoz.popularmovies.MovieDetailFragment">
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.jmunoz.popularmovies.MovieDetailFragment"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+    android:id="@+id/container">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/movie_title_height"
+        android:background="@color/pink">
     <TextView
         android:id="@+id/titleText"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/movie_title_height"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:padding="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/white"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/pink"
-        android:layout_margin="@dimen/activity_horizontal_margin"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:ellipsize="marquee"
         android:marqueeRepeatLimit ="marquee_forever"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:scrollHorizontally="true"/>
+        android:scrollHorizontally="true"
+        android:layout_weight="4"/>
+
+        <CheckBox android:id="@+id/star"
+            android:button="@drawable/checkbox_selector"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+        />
+    </LinearLayout>
 
 
     <TextView
         android:id="@+id/dateText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_gravity="end"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/dark_blue"
-        android:layout_alignParentRight="true"
+        android:textColor="@color/pink"
         android:layout_marginBottom="@dimen/date_margin"
-        android:layout_below="@+id/titleText"/>
+        android:layout_marginTop="@dimen/date_margin"
+        android:layout_marginRight="@dimen/date_margin"
+        />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dateText"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:minHeight="@dimen/poster_min_height"
         android:minWidth="@dimen/poster_min_width"/>
 
@@ -54,16 +67,13 @@
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:isIndicator="true" />
+        android:isIndicator="true"
+        android:layout_gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/overviewText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/ratingBar"
         android:padding="@dimen/activity_horizontal_margin"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/dark_blue"/>
@@ -74,20 +84,23 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/trailers"
         android:id="@+id/trailersLabel"
-        android:layout_below="@+id/overviewText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:textColor="@color/dark_orange"
-        android:layout_margin="@dimen/activity_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/trailerListView"
-        android:layout_below="@+id/trailersLabel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"/>
-</RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/reviews"
+        android:id="@+id/reviewsLabel"
+        android:textColor="@color/dark_orange"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+</LinearLayout>
 </ScrollView>
