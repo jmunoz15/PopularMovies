@@ -29,6 +29,11 @@ public class MovieAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setMovies(List<Movie> movies) {
+        mMoviesList = movies;
+        notifyDataSetChanged();
+    }
+
     public void resetAdapter(){
         mMoviesList = new ArrayList<>();
         notifyDataSetChanged();

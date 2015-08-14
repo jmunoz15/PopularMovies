@@ -7,8 +7,13 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,7 +35,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.jmunoz.popularmovies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.client.methods.HttpOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,14 +53,36 @@ public class MovieDetailFragment extends Fragment {
     public static final String FAVORITE_MOVIES = "favorite_movies";
 
     private Movie mMovie;
+    private ShareActionProvider mShareActionProvider;
 
     public MovieDetailFragment() {
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mMovie = getArguments().getParcelable(MoviesFragment.MOVIE_EXTRA);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.detail_fragment, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+    }
+
+    private Intent createShareTrailerIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme(getString(R.string.schema)).authority(getString(R.string.youtube_url)).
+                appendPath("watch").
+                appendQueryParameter("v", mMovie.getmTrailerList().get(1).getKey());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, builder.build().toString());
+        return shareIntent;
     }
 
     @Override
@@ -153,9 +179,9 @@ public class MovieDetailFragment extends Fragment {
 
                                 }
                             });
-                            if(trailers.size() == 0){
+                            if(trailers.size() > 0){
                                 TextView trailerLabel = (TextView) getView().findViewById(R.id.trailersLabel);
-                                trailerLabel.setVisibility(View.GONE);
+                                trailerLabel.setVisibility(View.VISIBLE);
                             }
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());
@@ -196,9 +222,10 @@ public class MovieDetailFragment extends Fragment {
                                 container.addView(reviewLayout);
                             }
 
-                            if(reviews.size() == 0){
+                            if(reviews.size() > 0){
                                 TextView reviewLabel = (TextView) getView().findViewById(R.id.reviewsLabel);
-                                reviewLabel.setVisibility(View.GONE);
+                                reviewLabel.setVisibility(View.VISIBLE);
+                                mShareActionProvider.setShareIntent(createShareTrailerIntent());
                             }
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage());

@@ -9,6 +9,7 @@
     <string name="sort_by" translatable="false">sort_by</string>
     <string name="popularity_value" translatable="false">popularity.desc</string>
     <string name="vote_average_value" translatable="false">vote_average.desc</string>
+    <string name="favorites_value">favorites</string>
     <string name="image_url" translatable="false">image.tmdb.org</string>
     <string name="date_api_format" translatable="false">yyyy-MM-dd</string>
     <string name="date_app_format" translatable="false">MM/dd/yyyy</string>
@@ -19,11 +20,13 @@
     <string name="order">Sort By</string>
     <string name="popularity">Popularity</string>
     <string name="highest_rated">Highest-rated</string>
+    <string name="favorites">Favorites</string>
     <string name="title_activity_settings">Settings</string>
     <string name="sort_by_summary">Change the sort order of the Grid</string>
 
     <string name="trailers">Trailers:</string>
     <string name="reviews">Reviews:</string>
+    <string name="action_share">Share</string>
 
 
 </resources>

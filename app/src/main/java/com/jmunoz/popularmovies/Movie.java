@@ -1,6 +1,7 @@
 package com.jmunoz.popularmovies;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -68,6 +69,25 @@ public class Movie implements Parcelable {
             movies.add(movie);
         }
 
+        return movies;
+    }
+
+    public static List<Movie> getMoviesFromCursor(Cursor cursor){
+        List<Movie> movies = new ArrayList<>();
+        Movie movie;
+        if((null != cursor) && (cursor.moveToFirst())){
+            while (!cursor.isAfterLast()){
+                movie = new Movie();
+                movie.setId(cursor.getString(MoviesFragment.COL_SERVER_ID));
+                movie.setTitle(cursor.getString(MoviesFragment.COL_TITLE));
+                movie.setPosterPath(cursor.getString(MoviesFragment.COL_POSTER));
+                movie.setReleaseDate(cursor.getString(MoviesFragment.COL_RELEASE_DATE));
+                movie.setOverview(cursor.getString(MoviesFragment.COL_OVERVIEW));
+                movie.setRating(cursor.getDouble(MoviesFragment.COL_RATING));
+                movies.add(movie);
+                cursor.moveToNext();
+            }
+        }
         return movies;
     }
 

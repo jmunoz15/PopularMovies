@@ -85,7 +85,8 @@
         android:text="@string/trailers"
         android:id="@+id/trailersLabel"
         android:textColor="@color/dark_orange"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:visibility="gone"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -101,6 +102,7 @@
         android:text="@string/reviews"
         android:id="@+id/reviewsLabel"
         android:textColor="@color/dark_orange"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:visibility="gone"/>
 </LinearLayout>
 </ScrollView>
