@@ -5,7 +5,6 @@
     <string name="base_url" translatable="false">api.themoviedb.org</string>
     <string name="schema" translatable="false">http</string>
     <string name="api_key" translatable="false">api_key</string>
-    <string name="api_key_value" translatable="false">cd15ba73833bbd906b185ba8a1361453</string>
     <string name="sort_by" translatable="false">sort_by</string>
     <string name="popularity_value" translatable="false">popularity.desc</string>
     <string name="vote_average_value" translatable="false">vote_average.desc</string>
@@ -16,7 +15,7 @@
     <string name="page" translatable="false">page</string>
     <string name="title_activity_movie_detail">Detail</string>
     <string name="youtube_url" translatable="false">youtube.com</string>
-    
+
     <string name="order">Sort By</string>
     <string name="popularity">Popularity</string>
     <string name="highest_rated">Highest-rated</string>
@@ -28,5 +27,6 @@
     <string name="reviews">Reviews:</string>
     <string name="action_share">Share</string>
 
+    <string name="api_key_value" translatable="false">cd15ba73833bbd906b185ba8a1361453</string>
 
 </resources>

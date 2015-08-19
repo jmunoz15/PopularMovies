@@ -9,10 +9,9 @@ import android.net.Uri;
 
 public class MoviesProvider extends ContentProvider {
 
+    static final int MOVIES = 100;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MoviesDbHelper mOpenHelper;
-
-    static final int MOVIES = 100;
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -32,7 +31,7 @@ public class MoviesProvider extends ContentProvider {
     public String getType(Uri uri) {
         final int match = sUriMatcher.match(uri);
 
-        switch (match){
+        switch (match) {
             case MOVIES:
                 return MoviesContract.MoviesEntry.CONTENT_TYPE;
             default:
@@ -43,7 +42,7 @@ public class MoviesProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             case MOVIES:
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         MoviesContract.MoviesEntry.TABLE_NAME,
@@ -68,7 +67,7 @@ public class MoviesProvider extends ContentProvider {
 
         Uri returnUri;
 
-        switch (match){
+        switch (match) {
             case MOVIES: {
                 long _id = db.insert(MoviesContract.MoviesEntry.TABLE_NAME, null, values);
                 if (_id > 0)
@@ -91,16 +90,16 @@ public class MoviesProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
 
-        if(null == selection) selection = "1";
+        if (null == selection) selection = "1";
 
-        switch (match){
+        switch (match) {
             case MOVIES:
                 rowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if(rowsDeleted != 0){
+        if (rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
@@ -112,14 +111,14 @@ public class MoviesProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
 
-        switch (match){
+        switch (match) {
             case MOVIES:
                 rowsUpdated = db.update(MoviesContract.MoviesEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if(rowsUpdated != 0){
+        if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
 

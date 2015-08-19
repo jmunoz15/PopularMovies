@@ -27,31 +27,16 @@ public class Review implements Parcelable {
     private String mContent;
 
 
-    public Review(){};
+    public Review() {
+    }
 
-    public Review(Parcel parcel){
+    ;
+
+    public Review(Parcel parcel) {
         mId = parcel.readString();
         mAuthor = parcel.readString();
         mContent = parcel.readString();
     }
-
-    public void setId(String id){
-        mId = id;
-    }
-
-    public void setAuthor(String author){
-        mAuthor = author;
-    }
-
-    public void setContent(String content){
-        mContent = content;
-    }
-
-    public String getAuthor(){
-        return mAuthor;
-    }
-
-    public String getContent(){ return mContent; };
 
     public static List<Review> getReviewsFromJSON(JSONObject response) throws JSONException {
         List<Review> trailers = new ArrayList<>();
@@ -59,7 +44,7 @@ public class Review implements Parcelable {
         JSONObject trailerObject;
         Review trailer;
         int index;
-        for(index = 0; index < trailerArray.length(); index++){
+        for (index = 0; index < trailerArray.length(); index++) {
             trailerObject = trailerArray.getJSONObject(index);
             trailer = new Review();
             trailer.setId(trailerObject.optString("id"));
@@ -68,6 +53,28 @@ public class Review implements Parcelable {
             trailers.add(trailer);
         }
         return trailers;
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    public String getAuthor() {
+        return mAuthor;
+    }
+
+    public void setAuthor(String author) {
+        mAuthor = author;
+    }
+
+    public String getContent() {
+        return mContent;
+    }
+
+    ;
+
+    public void setContent(String content) {
+        mContent = content;
     }
 
     @Override

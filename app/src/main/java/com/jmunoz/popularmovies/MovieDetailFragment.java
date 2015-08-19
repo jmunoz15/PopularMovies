@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
@@ -35,7 +35,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.jmunoz.popularmovies.data.MoviesContract;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -59,6 +58,21 @@ public class MovieDetailFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +94,7 @@ public class MovieDetailFragment extends Fragment {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(getString(R.string.schema)).authority(getString(R.string.youtube_url)).
                 appendPath("watch").
-                appendQueryParameter("v", mMovie.getmTrailerList().get(1).getKey());
+                appendQueryParameter("v", mMovie.getTrailerList().get(1).getKey());
         shareIntent.putExtra(Intent.EXTRA_TEXT, builder.build().toString());
         return shareIntent;
     }
@@ -89,7 +103,7 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        if(mMovie != null) {
+        if (mMovie != null) {
             TextView titleText = (TextView) rootView.findViewById(R.id.titleText);
             titleText.setText(mMovie.getTitle());
             TextView overviewText = (TextView) rootView.findViewById(R.id.overviewText);
@@ -136,7 +150,7 @@ public class MovieDetailFragment extends Fragment {
         return rootView;
     }
 
-    private String getReleaseDateWithFormat(){
+    private String getReleaseDateWithFormat() {
         SimpleDateFormat inputFormat = new SimpleDateFormat(getString(R.string.date_api_format));
         SimpleDateFormat outputFormat = new SimpleDateFormat(getString(R.string.date_app_format));
         Date date;
@@ -146,8 +160,7 @@ public class MovieDetailFragment extends Fragment {
             dateStr = outputFormat.format(date);
         } catch (ParseException e) {
             Log.e(TAG, e.getMessage());
-        }
-        finally {
+        } finally {
             return dateStr;
         }
     }
@@ -164,7 +177,7 @@ public class MovieDetailFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             List<Trailer> trailers = Trailer.getTrailersFromJSON(response);
-                            mMovie.setmTrailerList(trailers);
+                            mMovie.setTrailerList(trailers);
                             TrailerAdapter adapter = new TrailerAdapter();
                             ListView trailerList = (ListView) getView().findViewById(R.id.trailerListView);
                             trailerList.setAdapter(adapter);
@@ -175,12 +188,12 @@ public class MovieDetailFragment extends Fragment {
                                     Uri.Builder builder = new Uri.Builder();
                                     builder.scheme(getString(R.string.schema)).authority(getString(R.string.youtube_url)).
                                             appendPath("watch").
-                                            appendQueryParameter("v", mMovie.getmTrailerList().get(position).getKey());
+                                            appendQueryParameter("v", mMovie.getTrailerList().get(position).getKey());
                                     startActivity(new Intent(Intent.ACTION_VIEW, builder.build()));
 
                                 }
                             });
-                            if(trailers.size() > 0){
+                            if (trailers.size() > 0) {
                                 TextView trailerLabel = (TextView) getView().findViewById(R.id.trailersLabel);
                                 trailerLabel.setVisibility(View.VISIBLE);
                                 mShareActionProvider.setShareIntent(createShareTrailerIntent());
@@ -214,17 +227,17 @@ public class MovieDetailFragment extends Fragment {
                             List<Review> reviews = Review.getReviewsFromJSON(response);
                             mMovie.setReviewList(reviews);
                             LinearLayout container = (LinearLayout) getView().findViewById(R.id.container);
-                            for(Review review : reviews){
-                                LinearLayout reviewLayout = (LinearLayout)LayoutInflater.from(getActivity())
+                            for (Review review : reviews) {
+                                LinearLayout reviewLayout = (LinearLayout) LayoutInflater.from(getActivity())
                                         .inflate(R.layout.adapter_review, null);
-                                TextView contentText = (TextView)reviewLayout.findViewById(R.id.reviewText);
-                                TextView authorText = (TextView)reviewLayout.findViewById(R.id.authorText);
+                                TextView contentText = (TextView) reviewLayout.findViewById(R.id.reviewText);
+                                TextView authorText = (TextView) reviewLayout.findViewById(R.id.authorText);
                                 contentText.setText(review.getContent());
                                 authorText.setText(review.getAuthor());
                                 container.addView(reviewLayout);
                             }
 
-                            if(reviews.size() > 0){
+                            if (reviews.size() > 0) {
                                 TextView reviewLabel = (TextView) getView().findViewById(R.id.reviewsLabel);
                                 reviewLabel.setVisibility(View.VISIBLE);
 
@@ -244,32 +257,17 @@ public class MovieDetailFragment extends Fragment {
         PopularMoviesApp.getInstance().addToRequestQueue(request, TAG);
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        int totalHeight = 0;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
-
-    private class TrailerAdapter extends BaseAdapter{
+    private class TrailerAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
-            return mMovie.getmTrailerList() != null ? mMovie.getmTrailerList().size() : 0;
+            return mMovie.getTrailerList() != null ? mMovie.getTrailerList().size() : 0;
         }
 
         @Override
         public Object getItem(int position) {
-            return mMovie.getmTrailerList() != null ?
-                    ((ArrayList)mMovie.getmTrailerList()).get(position) : null;
+            return mMovie.getTrailerList() != null ?
+                    ((ArrayList) mMovie.getTrailerList()).get(position) : null;
         }
 
         @Override
@@ -280,20 +278,19 @@ public class MovieDetailFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            if(convertView == null){
+            if (convertView == null) {
                 holder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.adapter_trailer, null);
                 holder.title = (TextView) convertView.findViewById(R.id.trailerTitle);
                 convertView.setTag(holder);
-            }
-            else {
+            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.title.setText(mMovie.getmTrailerList().get(position).getName());
+            holder.title.setText(mMovie.getTrailerList().get(position).getName());
             return convertView;
         }
 
-        class ViewHolder{
+        class ViewHolder {
             TextView title;
         }
     }

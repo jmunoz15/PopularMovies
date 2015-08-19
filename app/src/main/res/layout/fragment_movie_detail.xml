@@ -4,106 +4,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:context="com.jmunoz.popularmovies.MovieDetailFragment"
-    android:layout_marginBottom="@dimen/activity_horizontal_margin"
-    android:id="@+id/container">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/movie_title_height"
-        android:background="@color/pink">
-    <TextView
-        android:id="@+id/titleText"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:marqueeRepeatLimit ="marquee_forever"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:scrollHorizontally="true"
-        android:layout_weight="4"
-        android:text="dfasfasf"/>
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:orientation="vertical"
+        tools:context="com.jmunoz.popularmovies.MovieDetailFragment">
 
-        <CheckBox android:id="@+id/favoriteCheckBox"
-            android:button="@drawable/checkbox_selector"
-            android:layout_width="50dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/movie_title_height"
+            android:background="@color/pink">
+
+            <TextView
+                android:id="@+id/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="4"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="dfasfasf"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white" />
+
+            <CheckBox
+                android:id="@+id/favoriteCheckBox"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_weight="1"
+                android:button="@drawable/checkbox_selector" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-        />
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/date_margin"
+            android:layout_marginRight="@dimen/date_margin"
+            android:layout_marginTop="@dimen/date_margin"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/pink" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:minHeight="@dimen/poster_min_height"
+            android:minWidth="@dimen/poster_min_width" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:isIndicator="true" />
+
+        <TextView
+            android:id="@+id/overviewText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/dark_blue" />
+
+        <TextView
+            android:id="@+id/trailersLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/trailers"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_orange"
+            android:visibility="gone" />
+
+        <ListView
+            android:id="@+id/trailerListView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin" />
+
+        <TextView
+            android:id="@+id/reviewsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/reviews"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/dark_orange"
+            android:visibility="gone" />
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/pink"
-        android:layout_marginBottom="@dimen/date_margin"
-        android:layout_marginTop="@dimen/date_margin"
-        android:layout_marginRight="@dimen/date_margin"
-        />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:minHeight="@dimen/poster_min_height"
-        android:minWidth="@dimen/poster_min_width"/>
-
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:isIndicator="true"
-        android:layout_gravity="center_horizontal"/>
-
-    <TextView
-        android:id="@+id/overviewText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/dark_blue"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/trailers"
-        android:id="@+id/trailersLabel"
-        android:textColor="@color/dark_orange"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:visibility="gone"/>
-
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/trailerListView"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/reviews"
-        android:id="@+id/reviewsLabel"
-        android:textColor="@color/dark_orange"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:visibility="gone"/>
-</LinearLayout>
 </ScrollView>

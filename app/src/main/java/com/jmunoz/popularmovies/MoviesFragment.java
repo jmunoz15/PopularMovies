@@ -1,7 +1,6 @@
 package com.jmunoz.popularmovies;
 
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,17 +30,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Set;
 
 
-public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String TAG = MoviesFragment.class.getSimpleName();
     public static final String MOVIE_EXTRA = "Movie";
     public static final int MAX_PAGES = 1000;
-
+    static final int COL_SERVER_ID = 1;
+    static final int COL_TITLE = 2;
+    static final int COL_POSTER = 3;
+    static final int COL_RELEASE_DATE = 4;
+    static final int COL_OVERVIEW = 5;
+    static final int COL_RATING = 6;
     private static final int MOVIES_LOADER = 0;
-
     private static final String[] MOVIES_COLUMS = {
             MoviesContract.MoviesEntry.TABLE_NAME + "." + MoviesContract.MoviesEntry._ID,
             MoviesContract.MoviesEntry.SERVER_ID,
@@ -51,15 +53,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             MoviesContract.MoviesEntry.COLUMN_OVERVIEW,
             MoviesContract.MoviesEntry.COLUMN_RATING
     };
-
-    static final int COL_MOVIE_ID = 0;
-    static final int COL_SERVER_ID = 1;
-    static final int COL_TITLE = 2;
-    static final int COL_POSTER = 3;
-    static final int COL_RELEASE_DATE = 4;
-    static final int COL_OVERVIEW = 5;
-    static final int COL_RATING = 6;
-
     private MovieAdapter mMovieAdapter;
     private int mPage;
     private boolean mLoadingPage;
@@ -81,12 +74,11 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         super.onResume();
         String sortPreference = mPreferences.getString(getString(R.string.sort_by),
                 getString(R.string.popularity_value));
-        if(!(sortPreference.equalsIgnoreCase(mSortSelected))){
+        if (!(sortPreference.equalsIgnoreCase(mSortSelected))) {
             mSortSelected = sortPreference;
-            if(sortPreference.equalsIgnoreCase(getString(R.string.favorites_value))){
+            if (sortPreference.equalsIgnoreCase(getString(R.string.favorites_value))) {
                 getLoaderManager().initLoader(MOVIES_LOADER, null, this);
-            }
-            else{
+            } else {
                 mPage = 0;
                 mMovieAdapter.resetAdapter();
             }
@@ -96,18 +88,18 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-            mRootView = inflater.inflate(R.layout.fragment_movies, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_movies, container, false);
 
-                mMovieAdapter = new MovieAdapter(getActivity());
-                GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
-                gridView.setAdapter(mMovieAdapter);
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        ((Callback) getActivity()).onItemSelected((Movie) mMovieAdapter.getItem(position));
-                    }
-                });
-                gridView.setOnScrollListener(new EndlessScrollListener());
+        mMovieAdapter = new MovieAdapter(getActivity());
+        GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
+        gridView.setAdapter(mMovieAdapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((Callback) getActivity()).onItemSelected((Movie) mMovieAdapter.getItem(position));
+            }
+        });
+        gridView.setOnScrollListener(new EndlessScrollListener());
 
         return mRootView;
     }
@@ -115,8 +107,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(mPreferences.getString(getString(R.string.sort_by), getString(R.string.popularity_value))
-                .equalsIgnoreCase(getString(R.string.favorites_value))){
+        if (mPreferences.getString(getString(R.string.sort_by), getString(R.string.popularity_value))
+                .equalsIgnoreCase(getString(R.string.favorites_value))) {
             getLoaderManager().initLoader(MOVIES_LOADER, null, this);
         }
     }
@@ -178,6 +170,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
+    public interface Callback {
+        void onItemSelected(Movie movie);
+    }
+
     class EndlessScrollListener implements AbsListView.OnScrollListener {
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
@@ -193,13 +189,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         @Override
         public void onScrollStateChanged(AbsListView view, int scrollState) {
         }
-    }
-
-    public interface Callback {
-        /**
-         * DetailFragmentCallback for when an item has been selected.
-         */
-        public void onItemSelected(Movie movie);
     }
 
 }

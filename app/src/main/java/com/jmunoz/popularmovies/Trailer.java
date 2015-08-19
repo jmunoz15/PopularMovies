@@ -28,9 +28,12 @@ public class Trailer implements Parcelable {
     private String mSite;
     private String mType;
 
-    public Trailer(){};
+    public Trailer() {
+    }
 
-    public Trailer(Parcel parcel){
+    ;
+
+    public Trailer(Parcel parcel) {
         mId = parcel.readString();
         mKey = parcel.readString();
         mName = parcel.readString();
@@ -38,39 +41,13 @@ public class Trailer implements Parcelable {
         mType = parcel.readString();
     }
 
-    public void setId(String id){
-        mId = id;
-    }
-
-    public void setKey(String key){
-        mKey = key;
-    }
-
-    public void setName(String name){
-        mName = name;
-    }
-
-    public void setSite(String site){
-        mSite = site;
-    }
-
-    public void setType(String type){
-        mType = type;
-    }
-
-    public String getName(){
-        return mName;
-    }
-
-    public String getKey(){ return mKey; };
-
     public static List<Trailer> getTrailersFromJSON(JSONObject response) throws JSONException {
         List<Trailer> trailers = new ArrayList<>();
         JSONArray trailerArray = response.getJSONArray("results");
         JSONObject trailerObject;
         Trailer trailer;
         int index;
-        for(index = 0; index < trailerArray.length(); index++){
+        for (index = 0; index < trailerArray.length(); index++) {
             trailerObject = trailerArray.getJSONObject(index);
             trailer = new Trailer();
             trailer.setId(trailerObject.optString("id"));
@@ -81,6 +58,36 @@ public class Trailer implements Parcelable {
             trailers.add(trailer);
         }
         return trailers;
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    public void setSite(String site) {
+        mSite = site;
+    }
+
+    public void setType(String type) {
+        mType = type;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public String getKey() {
+        return mKey;
+    }
+
+    ;
+
+    public void setKey(String key) {
+        mKey = key;
     }
 
     @Override

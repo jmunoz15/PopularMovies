@@ -14,8 +14,7 @@
         android:layout_height="match_parent"
         android:layout_weight="2"
         tools:context="com.jmunoz.popularmovies.MoviesFragment"
-        tools:layout="@layout/fragment_movies"
-        />
+        tools:layout="@layout/fragment_movies" />
 
     <FrameLayout
         android:id="@+id/movies_detail_container"

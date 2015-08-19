@@ -4,15 +4,12 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.jmunoz.popularmovies.Movie;
-
-public class MoviesDbHelper extends SQLiteOpenHelper{
-
-    private static final int DATABASE_VERSION = 1;
+public class MoviesDbHelper extends SQLiteOpenHelper {
 
     static final String DATABASE_NAME = "movies.db";
+    private static final int DATABASE_VERSION = 1;
 
-    public MoviesDbHelper(Context context){
+    public MoviesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

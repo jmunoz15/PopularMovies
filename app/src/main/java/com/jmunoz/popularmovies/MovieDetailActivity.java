@@ -1,7 +1,6 @@
 package com.jmunoz.popularmovies;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -19,7 +18,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             Movie movie = getIntent().getParcelableExtra(MoviesFragment.MOVIE_EXTRA);
             Bundle args = new Bundle();
             args.putParcelable(MoviesFragment.MOVIE_EXTRA,
-                   movie);
+                    movie);
             MovieDetailFragment fragment = new MovieDetailFragment();
             fragment.setArguments(args);
             getSupportFragmentManager().beginTransaction()
@@ -38,7 +37,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id){
+        switch (id) {
             case R.id.action_settings:
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);

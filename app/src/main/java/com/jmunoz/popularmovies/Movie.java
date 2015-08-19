@@ -34,11 +34,11 @@ public class Movie implements Parcelable {
     private List<Trailer> mTrailerList;
     private List<Review> mReviewList;
 
-    public Movie(){
+    public Movie() {
 
     }
 
-    public Movie(Parcel parcel){
+    public Movie(Parcel parcel) {
         mId = parcel.readString();
         mTitle = parcel.readString();
         mPosterPath = parcel.readString();
@@ -57,7 +57,7 @@ public class Movie implements Parcelable {
         JSONObject movieObject;
         Movie movie;
         int index;
-        for(index = 0; index < moviesArray.length(); index++){
+        for (index = 0; index < moviesArray.length(); index++) {
             movieObject = moviesArray.getJSONObject(index);
             movie = new Movie();
             movie.setId(movieObject.optString("id"));
@@ -72,11 +72,11 @@ public class Movie implements Parcelable {
         return movies;
     }
 
-    public static List<Movie> getMoviesFromCursor(Cursor cursor){
+    public static List<Movie> getMoviesFromCursor(Cursor cursor) {
         List<Movie> movies = new ArrayList<>();
         Movie movie;
-        if((null != cursor) && (cursor.moveToFirst())){
-            while (!cursor.isAfterLast()){
+        if ((null != cursor) && (cursor.moveToFirst())) {
+            while (!cursor.isAfterLast()) {
                 movie = new Movie();
                 movie.setId(cursor.getString(MoviesFragment.COL_SERVER_ID));
                 movie.setTitle(cursor.getString(MoviesFragment.COL_TITLE));
@@ -91,19 +91,19 @@ public class Movie implements Parcelable {
         return movies;
     }
 
-    public static String getPosterUrl(String posterPath, Context context){
+    public static String getPosterUrl(String posterPath, Context context) {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(context.getString(R.string.schema)).authority(context.getString(R.string.image_url))
                 .appendPath("t").appendPath("p").appendPath("w500");
         return builder.build().toString().concat(posterPath);
     }
 
-    public void setId(String id) {
-        mId = id;
+    public String getId() {
+        return mId;
     }
 
-    public String getId(){
-        return mId;
+    public void setId(String id) {
+        mId = id;
     }
 
     public String getTitle() {
@@ -146,17 +146,15 @@ public class Movie implements Parcelable {
         mOverview = overview;
     }
 
-    public List<Trailer> getmTrailerList() {
+    public List<Trailer> getTrailerList() {
         return mTrailerList;
     }
 
-    public void setmTrailerList(List<Trailer> mTrailerList) {
-        this.mTrailerList = mTrailerList;
+    public void setTrailerList(List<Trailer> trailerList) {
+        mTrailerList = trailerList;
     }
 
-    public List<Review> getReviewList(){ return mReviewList; }
-
-    public void setReviewList(List<Review> reviewList){
+    public void setReviewList(List<Review> reviewList) {
         mReviewList = reviewList;
     }
 
