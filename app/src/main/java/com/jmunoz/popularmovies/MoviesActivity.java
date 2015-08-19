@@ -3,23 +3,24 @@ package com.jmunoz.popularmovies;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MoviesActivity extends AppCompatActivity {
+public class MoviesActivity extends AppCompatActivity implements MoviesFragment.Callback {
 
-    private Fragment mMoviesFragment;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+    private static final String MOVIESFRAGMENT_TAG = "MFTAG";
+
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies);
-        if (savedInstanceState == null) {
-            mMoviesFragment = new MoviesFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, mMoviesFragment)
-                    .commit();
+        if(findViewById(R.id.movies_detail_container) != null){
+            mTwoPane = true;
         }
     }
 
@@ -41,4 +42,25 @@ public class MoviesActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onItemSelected(Movie movie) {
+        if(mTwoPane){
+            Bundle args = new Bundle();
+            args.putParcelable(MoviesFragment.MOVIE_EXTRA, movie);
+
+            MovieDetailFragment fragment = new MovieDetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movies_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        }
+        else {
+            Intent intent = new Intent(this, MovieDetailActivity.class);
+            intent.putExtra(MoviesFragment.MOVIE_EXTRA, movie);
+            startActivity(intent);
+        }
+    }
+    
 }

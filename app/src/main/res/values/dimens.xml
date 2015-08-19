@@ -10,5 +10,7 @@
     <dimen name="date_margin">10dp</dimen>
     <dimen name="grid_width">150dp</dimen>
     <dimen name="trailer_item_height">48dp</dimen>
-    <dimen name="trailer_margin">2dp</dimen>
+    <dimen name="trailer_margin">2dp</dimen>ç
+    <dimen name="detail_poster_width">150dp</dimen>
+    <dimen name="detail_poster_height">200dp</dimen>
 </resources>

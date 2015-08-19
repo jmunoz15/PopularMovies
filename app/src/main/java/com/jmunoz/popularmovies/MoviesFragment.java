@@ -67,13 +67,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private String mSortSelected;
     private SharedPreferences mPreferences;
 
-    public MoviesFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mSortSelected = mPreferences.getString(getString(R.string.sort_by),
                 getString(R.string.popularity_value));
@@ -99,21 +96,19 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
             mRootView = inflater.inflate(R.layout.fragment_movies, container, false);
-            mMovieAdapter = new MovieAdapter(getActivity());
-            GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
-            gridView.setAdapter(mMovieAdapter);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-                    intent.putExtra(MOVIE_EXTRA, (Movie) mMovieAdapter.getItem(position));
-                    startActivity(intent);
-                }
-            });
-            gridView.setOnScrollListener(new EndlessScrollListener());
-        }
+
+                mMovieAdapter = new MovieAdapter(getActivity());
+                GridView gridView = (GridView) mRootView.findViewById(R.id.gridView);
+                gridView.setAdapter(mMovieAdapter);
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        ((Callback) getActivity()).onItemSelected((Movie) mMovieAdapter.getItem(position));
+                    }
+                });
+                gridView.setOnScrollListener(new EndlessScrollListener());
+
         return mRootView;
     }
 
@@ -199,4 +194,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         public void onScrollStateChanged(AbsListView view, int scrollState) {
         }
     }
+
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Movie movie);
+    }
+
 }

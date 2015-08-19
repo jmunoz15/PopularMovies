@@ -89,49 +89,50 @@ public class MovieDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        TextView titleText = (TextView) rootView.findViewById(R.id.titleText);
-        titleText.setText(mMovie.getTitle());
-        TextView overviewText = (TextView) rootView.findViewById(R.id.overviewText);
-        overviewText.setText(mMovie.getOverview());
-        RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.ratingBar);
-        ratingBar.setRating((float) mMovie.getRating() / 2.0f);
-        TextView dateText = (TextView) rootView.findViewById(R.id.dateText);
-        dateText.setText(getReleaseDateWithFormat());
-        ImageView poster = (ImageView) rootView.findViewById(R.id.imageView);
-        Picasso.with(getActivity())
-                .load(Movie.getPosterUrl(mMovie.getPosterPath(), getActivity()))
-                .into(poster);
-        CheckBox favoriteCheckBox = (CheckBox) rootView.findViewById(R.id.favoriteCheckBox);
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        final Set<String> favoriteMovies = preferences.getStringSet(FAVORITE_MOVIES, new HashSet<String>());
-        if(favoriteMovies.contains(mMovie.getId())){
-            favoriteCheckBox.setChecked(true);
-        }
-        favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    ContentValues values = new ContentValues();
-                    values.put(MoviesContract.MoviesEntry.SERVER_ID, mMovie.getId());
-                    values.put(MoviesContract.MoviesEntry.COLUMN_TITLE, mMovie.getTitle());
-                    values.put(MoviesContract.MoviesEntry.COLUMN_POSTER, mMovie.getPosterPath());
-                    values.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
-                    values.put(MoviesContract.MoviesEntry.COLUMN_OVERVIEW, mMovie.getOverview());
-                    values.put(MoviesContract.MoviesEntry.COLUMN_RATING, mMovie.getRating());
-                    getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, values);
-                    favoriteMovies.add(mMovie.getId());
-                }
-                else{
-                    String selection = MoviesContract.MoviesEntry.SERVER_ID + " = ?";
-                    String[] selectionArgs = {mMovie.getId()};
-                    int deleted = getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI, selection, selectionArgs);
-                    favoriteMovies.remove(mMovie.getId());
-                }
-                preferences.edit().putStringSet(FAVORITE_MOVIES, favoriteMovies).commit();
+        if(mMovie != null) {
+            TextView titleText = (TextView) rootView.findViewById(R.id.titleText);
+            titleText.setText(mMovie.getTitle());
+            TextView overviewText = (TextView) rootView.findViewById(R.id.overviewText);
+            overviewText.setText(mMovie.getOverview());
+            RatingBar ratingBar = (RatingBar) rootView.findViewById(R.id.ratingBar);
+            ratingBar.setRating((float) mMovie.getRating() / 2.0f);
+            TextView dateText = (TextView) rootView.findViewById(R.id.dateText);
+            dateText.setText(getReleaseDateWithFormat());
+            ImageView poster = (ImageView) rootView.findViewById(R.id.imageView);
+            Picasso.with(getActivity())
+                    .load(Movie.getPosterUrl(mMovie.getPosterPath(), getActivity()))
+                    .into(poster);
+            CheckBox favoriteCheckBox = (CheckBox) rootView.findViewById(R.id.favoriteCheckBox);
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            final Set<String> favoriteMovies = preferences.getStringSet(FAVORITE_MOVIES, new HashSet<String>());
+            if (favoriteMovies.contains(mMovie.getId())) {
+                favoriteCheckBox.setChecked(true);
             }
-        });
-        getTrailerList();
-        getReviewList();
+            favoriteCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        ContentValues values = new ContentValues();
+                        values.put(MoviesContract.MoviesEntry.SERVER_ID, mMovie.getId());
+                        values.put(MoviesContract.MoviesEntry.COLUMN_TITLE, mMovie.getTitle());
+                        values.put(MoviesContract.MoviesEntry.COLUMN_POSTER, mMovie.getPosterPath());
+                        values.put(MoviesContract.MoviesEntry.COLUMN_RELEASE_DATE, mMovie.getReleaseDate());
+                        values.put(MoviesContract.MoviesEntry.COLUMN_OVERVIEW, mMovie.getOverview());
+                        values.put(MoviesContract.MoviesEntry.COLUMN_RATING, mMovie.getRating());
+                        getActivity().getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, values);
+                        favoriteMovies.add(mMovie.getId());
+                    } else {
+                        String selection = MoviesContract.MoviesEntry.SERVER_ID + " = ?";
+                        String[] selectionArgs = {mMovie.getId()};
+                        getActivity().getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI, selection, selectionArgs);
+                        favoriteMovies.remove(mMovie.getId());
+                    }
+                    preferences.edit().putStringSet(FAVORITE_MOVIES, favoriteMovies).commit();
+                }
+            });
+            getTrailerList();
+            getReviewList();
+        }
         return rootView;
     }
 
@@ -182,9 +183,10 @@ public class MovieDetailFragment extends Fragment {
                             if(trailers.size() > 0){
                                 TextView trailerLabel = (TextView) getView().findViewById(R.id.trailersLabel);
                                 trailerLabel.setVisibility(View.VISIBLE);
+                                mShareActionProvider.setShareIntent(createShareTrailerIntent());
                             }
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error retrieving trailer list");
                         }
                     }
                 },
@@ -225,10 +227,10 @@ public class MovieDetailFragment extends Fragment {
                             if(reviews.size() > 0){
                                 TextView reviewLabel = (TextView) getView().findViewById(R.id.reviewsLabel);
                                 reviewLabel.setVisibility(View.VISIBLE);
-                                mShareActionProvider.setShareIntent(createShareTrailerIntent());
+
                             }
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage());
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error retrieving review list");
                         }
                     }
                 },
