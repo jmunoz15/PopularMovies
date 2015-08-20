@@ -27,6 +27,6 @@
     <string name="reviews">Reviews:</string>
     <string name="action_share">Share</string>
 
-    <string name="api_key_value" translatable="false">cd15ba73833bbd906b185ba8a1361453</string>
+    <string name="api_key_value" translatable="false">API KEY HERE</string>
 
 </resources>
