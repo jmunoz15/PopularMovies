@@ -1,11 +1,10 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/dark_orange</item>
+        <item name="colorPrimary">@color/pink</item>
+        <item name="colorPrimaryDark">@color/dark_pink</item>
         <item name="android:colorBackground">@color/light_blue</item>
         <item name="android:textColorPrimary">@color/dark_blue</item>
         <item name="android:textColorSecondary">@color/dark_orange</item>
     </style>
-
 </resources>
